@@ -17,3 +17,7 @@ class Cat:
 bob_the_cat = Cat("Bob", 3, "gray")
 print(bob_the_cat.meow())
 print(bob_the_cat.fressen())
+
+alice_the_cat = Cat("Alice", 2, "black")
+print(alice_the_cat.meow())
+print(alice_the_cat.fressen())
