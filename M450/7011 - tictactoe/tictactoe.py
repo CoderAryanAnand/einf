@@ -41,6 +41,9 @@ starting_option="Human", manager=ui_manager)
 restart_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(
     (10, 160), (130, 40)), text="Restart", manager=ui_manager)
 
+log_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect(
+    (5, 500), (130, 40)), text="Player 1 turn", manager=ui_manager)
+
 positions_of_grid_cells = [[(175, 25), (310, 25), (440, 25)],
                            [(175, 160), (310, 160), (440, 160)],
                            [(175, 290), (310, 290), (440, 290)]]
@@ -69,6 +72,19 @@ def draw_grid(screen=screen):
                 position = positions_of_grid_cells[y][x]
                 screen.blit(o_img, position)
                 
+def check_winner(grid):
+    # Check rows and columns
+    for i in range(3):
+        if grid[i][0] == grid[i][1] == grid[i][2] != 0:
+            return grid[i][0]
+        if grid[0][i] == grid[1][i] == grid[2][i] != 0:
+            return grid[0][i]
+    # Check diagonals
+    if grid[0][0] == grid[1][1] == grid[2][2] != 0:
+        return grid[0][0]
+    if grid[0][2] == grid[1][1] == grid[2][0] != 0:
+        return grid[0][2]
+    return 0
 
 tic_tac_toe_grid = [[0 for _ in range(3)] for _ in range(3)]
 
@@ -102,17 +118,25 @@ while is_running:
             is_running = False
 
         ui_manager.process_events(event)
-
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos.set_text(str(pygame.mouse.get_pos()))
             y, x = get_grid_pos(pygame.mouse.get_pos())
             if x != -1 and y != -1:
                 if player_turn % 2 == 1:
-                    tic_tac_toe_grid[y][x] = 1
-                    player_turn += 1
+                    tic_tac_toe_grid[y][x] = 1 if tic_tac_toe_grid[y][x] == 0 else tic_tac_toe_grid[y][x]
+                    player_turn += 1 if tic_tac_toe_grid[y][x] == 1 else 0
+                    log_text.set_text("Player 2 turn")
                 else:
-                    tic_tac_toe_grid[y][x] = 2
-                    player_turn += 1
+                    tic_tac_toe_grid[y][x] = 2 if tic_tac_toe_grid[y][x] == 0 else tic_tac_toe_grid[y][x]
+                    player_turn += 1 if tic_tac_toe_grid[y][x] == 2 else 0
+                    log_text.set_text("Player 1 turn")
+                winner = check_winner(tic_tac_toe_grid)
+                if winner != 0:
+                    log_text.set_text(f"Player {winner} wins!")
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.ui_element == restart_button:
+                tic_tac_toe_grid = [[0 for _ in range(3)] for _ in range(3)]
+                player_turn = 1
                 
 
     ui_manager.update(time_delta)
