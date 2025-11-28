@@ -15,7 +15,7 @@ GRID_V_PADDING = 25
 GRID_SIZE = 400
 PARTICIPANTS = ("Human", "AI Random")
 
-HIGHSCORE_FILE = "highscores.json"
+HIGHSCORE_FILE = "M450/7011 - tictactoe/highscores.json"
 
 pygame.init()
 
@@ -51,11 +51,11 @@ log_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect(
 
 # highscore display
 highscore_label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect(
-    (5, 420), (130, 80)), text="Highscores:\n", manager=ui_manager)
+    (5, 700), (130, 80)), text="Highscores:\n", manager=ui_manager)
 
-positions_of_grid_cells = [[(175, 25), (310, 25), (440, 25)],
-                           [(175, 160), (310, 160), (440, 160)],
-                           [(175, 290), (310, 290), (440, 290)]]
+positions_of_grid_cells = [[(185, 35), (320, 35), (450, 35)],
+                           [(185, 170), (320, 170), (450, 170)],
+                           [(185, 300), (320, 300), (450, 300)]]
 
 # utility highscore functions
 def load_highscores():
