@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/pure.css') }}">
+    </head>
+    <body>
+        <h1>Hallo</h1>  
+        {% if username == "Michael": %}
+          <p>Hi, my developer</p>   
+        {% else %}
+          <p>Hello {{ username }}</p>   
+        {% endif %}
+    </body>
+</html>
