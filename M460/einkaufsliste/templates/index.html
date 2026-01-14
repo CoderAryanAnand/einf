@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ihre Einkaufsliste</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Anzahl</th>
+                <th>Einkauf</th>
+                <th>Aktion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grocery in groceries %}
+            <tr>
+                <td>{{ grocery.number }}</td>
+                <td>{{ grocery.description }}</td>
+                <td><a href="{{ url_for('delete', id=grocery.id) }}">Löschen</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h1>Fügen Sie einen Einkauf hinzu</h1>
+    <p>{{ message }}</p>
+    <form method="post">
+        <input type="number" min="1" name="number" value="{{ number }}" required>
+        <input type="text" name="description" value="{{ description }}" required>
+        <input type="submit">
+    </form>
+</body>
+</html>
