@@ -52,3 +52,24 @@ def delete(id):
     db.session.delete(grocery)
     db.session.commit()
     return redirect(url_for('home'))
+
+@app.route("/update/<int:id>", methods=("GET", "POST"))
+def update(id):
+    grocery = ShoppingItem.query.filter_by(id=id).first()
+    if not grocery:
+        abort(404)
+
+    amount = grocery.number
+    desc = grocery.description
+    if request.method == "POST":
+        amount = request.form["amount"]
+        desc = request.form["desc"]
+        if not amount.isnumeric():
+            return render_template("update.html", prev_amount=amount, prev_desc=desc)
+        if not desc:
+            return render_template("update.html", prev_amount=amount, prev_desc=desc)  
+        grocery.number = amount
+        grocery.description = desc
+        db.session.commit()
+        return redirect(url_for("home"))  
+    return render_template("update.html", prev_amount=amount, prev_desc=desc)

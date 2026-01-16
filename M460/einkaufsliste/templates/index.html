@@ -20,7 +20,7 @@
             <tr>
                 <td>{{ grocery.number }}</td>
                 <td>{{ grocery.description }}</td>
-                <td><a href="{{ url_for('delete', id=grocery.id) }}">Löschen</a></td>
+                <td><a href="{{ url_for('delete', id=grocery.id) }}">Löschen</a><a href="{{ url_for('update', id=grocery.id) }}">Update</a></td>
             </tr>
             {% endfor %}
         </tbody>
