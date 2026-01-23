@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Unit Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        table { border-collapse: collapse; width: 60%; margin-bottom: 2em; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f0f0f0; }
+        form { margin-bottom: 2em; }
+        label { display: block; margin-top: 1em; }
+        input[type="text"], input[type="number"] { width: 200px; }
+        input[type="submit"] { margin-top: 1em; }
+    </style>
+</head>
+<body>
+    <h1>Admin - Manage Units</h1>
+
+    <h2>Add New Conversion</h2>
+    <form method="post" action="{{ url_for('admin') }}">
+        <label for="name1">Unit 1 (e.g. km):</label>
+        <input type="text" id="name1" name="name1" required>
+
+        <label for="name2">Unit 2 (e.g. m):</label>
+        <input type="text" id="name2" name="name2" required>
+
+        <label for="rate">Rate (How many Unit 2 in 1 Unit 1, e.g. 1 km = 1000 m, so rate=1000):</label>
+        <input type="number" step="any" id="rate" name="rate" required>
+
+        <input type="submit" value="Add Conversion">
+    </form>
+
+    <h2>Existing Conversions</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Unit 1</th>
+            <th>Unit 2</th>
+            <th>Rate (Unit 1 to Unit 2)</th>
+        </tr>
+        {% for unit in units %}
+        <tr>
+            <td>{{ unit.id }}</td>
+            <td>{{ unit.name1 }}</td>
+            <td>{{ unit.name2 }}</td>
+            <td>{{ unit.rate }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Einheitumrechner</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        form { margin-bottom: 1em; }
+        label, select, input { margin: 0.5em 0; display: block; }
+        .result { margin-top: 1em; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Einheitumrechner</h1>
+    <form method="POST">
+        <label for="number">Zahl:</label>
+        <input type="number" step="any" name="number" id="number" required>
+
+        <label for="from_unit">Von Einheit:</label>
+        <select name="from_unit" id="from_unit" required>
+            {% for name in units %}
+                <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="to_unit">Zu Einheit:</label>
+        <select name="to_unit" id="to_unit" required>
+            {% for name in units %}
+                <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Umrechnen</button>
+    </form>
+
+    {% if result is not none %}
+        <div class="result">
+            Ergebnis: {{ result }}
+        </div>
+    {% endif %}
+
+    <a href="{{ url_for('admin') }}">Adminbereich</a>
+</body>
+</html>
