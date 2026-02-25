@@ -16,6 +16,7 @@ class NachhilfeInserat(db.Model):
     subject = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price_per_hour = db.Column(db.Float, nullable=False)
+    contact_info = db.Column(db.String(100), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
@@ -67,12 +68,14 @@ def create_inserat():
         subject = request.form['subject']
         description = request.form['description']
         price_per_hour = request.form['price_per_hour']
+        contact_info = request.form['contact_info']
         if not subject or not description or not price_per_hour:
             abort(404)
         new_inserat = NachhilfeInserat(
             subject=subject,
             description=description,
             price_per_hour=float(price_per_hour),
+            contact_info=contact_info,
             user_id=session['user_id']
         )
         db.session.add(new_inserat)
@@ -102,7 +105,32 @@ def edit_inserat(inserat_id):
         inserat.subject = request.form['subject']
         inserat.description = request.form['description']
         inserat.price_per_hour = float(request.form['price_per_hour'])
+        inserat.contact_info = request.form['contact_info']
         db.session.commit()
         return redirect(url_for('main'))
     return render_template("edit_inserat.html", inserat=inserat)
 
+@app.route("/delete_user/<int:user_id>", methods=["POST"])
+def delete_user(user_id):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    if not (session['user_id'] == 1):
+        abort(403)
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+
+@app.route("/edit_user/<int:user_id>", methods=["GET", "POST"])
+def edit_user(user_id):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    if not (session['user_id'] == 1):
+        abort(403)
+    user = User.query.get_or_404(user_id)
+    if request.method == "POST":
+        user.name = request.form['name']
+        db.session.commit()
+        return redirect(url_for('admin'))
+    return render_template("edit_user.html", user=user)

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main page</title>
+</head>
+<body>
+    {{ if session.username == "admin" }}
+        <a href="/admin">Admin Panel</a>
+    {{ end }}
+    <a href="/create_inserat">Create Inserat</a>
+    {{ for inserat in inserate }}
+        <div>
+            <h2>{{ inserat.subject }}</h2>
+            <p>{{ inserat.description }}</p>
+            <p>Price: {{ inserat.price_per_hour }}</p>
+            <br>
+            <p>Contact Info: {{ inserat.contact_info }}</p>
+            {{ if session.user_id == inserat.user_id }}
+                <a href="/edit_inserat/{{ inserat.id }}">Edit</a>
+                <form method="POST" action="/delete_inserat/{{ inserat.id }}" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            {{ end }}
+        </div>
+    {{ end }}
+</body>
+</html>
