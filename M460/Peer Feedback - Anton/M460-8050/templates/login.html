@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Log-In</h1>
+    {% if message %}
+        <p><strong>{{ message }}</strong></p>
+    {% endif %}
+
+    <form method="POST">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit">Log-In</button>
+    </form>
+
+
+    <h4>not logged in yet?</h4>
+    <a href='/register'>register</a> 
+  </body>

@@ -24,7 +24,7 @@ class NachhilfeInserat(db.Model):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        name = request.form['name']
+        name = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(name=name, password=password).first()
         if not name or not password:
@@ -40,7 +40,7 @@ def login():
             return redirect(url_for('main'))
     return render_template("login.html")
 
-@app.route("/main", methods=["GET"])
+@app.route("/", methods=["GET"])
 def main():
     if not session.get('user_id'):
         return redirect(url_for('login'))
@@ -58,7 +58,8 @@ def admin():
         return redirect(url_for('login'))
     if not (session['user_id'] == 1):
         abort(403)
-    return render_template("admin.html")
+    users = User.query.all()
+    return render_template("admin.html", users=users)
 
 @app.route("/create_inserat", methods=["GET", "POST"])
 def create_inserat():

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Message Local Gangstas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var current_user_id = {{ session.user_id }};
+    </script>
+
+    <h1>Message Board</h1>
+
+    <p>
+      Logged in as: <i id="user">{{ username }}</i>
+      <a href="{{ url_for('logout') }}">Log Out</a>
+    </p>
+
+    <p>
+      Click <a href="{{ url_for('delete_acc') }}">here</a> to delete your account      
+    </p>
+
+    <ul id="online">
+      <p>Users Online:</p>
+      {% for i in online_users %}
+        {% if i.id != session.user_id %}
+          <li id="user-{{ i.Username }}">
+            <strong>{{ i.Username }}</strong>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <ul id="messages">
+        {% for msg in messages %}
+            {% set time = msg.timestamp[11:16] %}
+            <li id="msg-{{msg.id}}">
+              <strong>{{msg.username }}</strong><small> sent at: </small>{{time}}<br>{{msg.content }} 
+
+              {% if msg.user_id == session.user_id %}
+              <button type="button" class="delete_msg" value="{{msg.id}}"> 🗑️ </button>
+              {% endif %}
+
+            </li>
+        {% endfor %}
+    </ul>
+
+    <form id="form">
+      <input type="text" id="content" autocomplete="off" placeholder="Message Local Gangstas" required>
+      <button type="submit">Send</button>
+    </form>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+
+  </body>

@@ -1,0 +1,14 @@
+      #messages {
+        height: 600px;
+        overflow-y:auto;
+        overflow-x: hidden;
+        border: 1px solid #ccc;
+        padding: 10px;
+        list-style-type: none;
+        background-color: #f9f9f9;
+        margin-top: 20px;
+      }
+      li {
+        padding: 5px 0;
+        border-bottom: 1px solid #bd1414;
+      }
