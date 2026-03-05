@@ -27,6 +27,22 @@
             {% endfor %}
         {% endwith %}
 
+        <form method="GET" action="/" class="search-bar">
+            <div class="search-row">
+                <input type="text" name="search" placeholder="Suche nach Fach oder Stichwort..." value="{{ search }}" class="search-input">
+                <input type="number" name="max_price" placeholder="Max. Preis (CHF)" step="0.01" value="{{ max_price }}" class="search-price">
+                <select name="sort" class="search-sort">
+                    <option value="newest" {{ 'selected' if sort == 'newest' }}>Neueste zuerst</option>
+                    <option value="price_asc" {{ 'selected' if sort == 'price_asc' }}>Preis aufsteigend</option>
+                    <option value="price_desc" {{ 'selected' if sort == 'price_desc' }}>Preis absteigend</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Suchen</button>
+            </div>
+            {% if search or max_price or sort != 'newest' %}
+                <a href="/" class="search-reset">Filter zurücksetzen</a>
+            {% endif %}
+        </form>
+
         {% if inserate %}
             {% for inserat in inserate %}
                 <div class="card">

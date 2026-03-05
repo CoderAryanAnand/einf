@@ -50,8 +50,36 @@ def login():
 def main():
     if not session.get('user_id'):
         return redirect(url_for('login'))
-    inserate = NachhilfeInserat.query.all()
-    return render_template("main.html", inserate=inserate)
+
+    search = request.args.get('search', '').strip()
+    max_price = request.args.get('max_price', '').strip()
+    sort = request.args.get('sort', 'newest')
+
+    query = NachhilfeInserat.query
+
+    if search:
+        query = query.filter(
+            db.or_(
+                NachhilfeInserat.subject.ilike(f'%{search}%'),
+                NachhilfeInserat.description.ilike(f'%{search}%')
+            )
+        )
+
+    if max_price:
+        try:
+            query = query.filter(NachhilfeInserat.price_per_hour <= float(max_price))
+        except ValueError:
+            pass
+
+    if sort == 'price_asc':
+        query = query.order_by(NachhilfeInserat.price_per_hour.asc())
+    elif sort == 'price_desc':
+        query = query.order_by(NachhilfeInserat.price_per_hour.desc())
+    else:
+        query = query.order_by(NachhilfeInserat.id.desc())
+
+    inserate = query.all()
+    return render_template("main.html", inserate=inserate, search=search, max_price=max_price, sort=sort)
 
 @app.route("/logout", methods=["GET"])
 def logout():
