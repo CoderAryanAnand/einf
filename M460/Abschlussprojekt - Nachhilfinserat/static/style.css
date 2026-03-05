@@ -324,6 +324,27 @@ a {
     font-size: 1rem;
 }
 
+/* ===== Flash Messages ===== */
+.flash {
+    padding: 0.7rem 1rem;
+    border-radius: 9px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.flash-error {
+    background: #fde8e8;
+    color: #c62b2b;
+    border: 1px solid #f5c6c6;
+}
+
+.flash-success {
+    background: #e6f9ef;
+    color: #1a7a42;
+    border: 1px solid #b8e6cc;
+}
+
 /* ===== Back link ===== */
 .back-link {
     display: inline-flex;

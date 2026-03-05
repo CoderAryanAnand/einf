@@ -17,6 +17,11 @@
     <div class="form-wrapper">
         <div class="form-card">
             <h1>Neues Inserat erstellen</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
             <form method="POST" action="/create_inserat">
                 <div class="form-group">
                     <label for="subject">Fach</label>

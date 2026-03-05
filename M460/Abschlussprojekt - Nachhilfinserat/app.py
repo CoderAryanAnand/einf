@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, abort, session
+from flask import Flask, render_template, request, redirect, url_for, abort, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -24,19 +24,25 @@ class NachhilfeInserat(db.Model):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        name = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(name=name, password=password).first()
+        name = request.form['username'].strip()
+        password = request.form['password'].strip()
         if not name or not password:
-            abort(404)
-        if user:
-            session['user_id'] = user.id
-            return redirect(url_for('main'))
+            flash('Benutzername und Passwort dürfen nicht leer sein.', 'error')
+            return render_template("login.html")
+        existing_user = User.query.filter_by(name=name).first()
+        if existing_user:
+            if existing_user.password == password:
+                session['user_id'] = existing_user.id
+                return redirect(url_for('main'))
+            else:
+                flash('Falsches Passwort.', 'error')
+                return render_template("login.html")
         else:
             new_user = User(name=name, password=password)
             db.session.add(new_user)
             db.session.commit()
             session['user_id'] = new_user.id
+            flash('Konto erfolgreich erstellt!', 'success')
             return redirect(url_for('main'))
     return render_template("login.html")
 
@@ -66,21 +72,31 @@ def create_inserat():
     if not session.get('user_id'):
         return redirect(url_for('login'))
     if request.method == "POST":
-        subject = request.form['subject']
-        description = request.form['description']
-        price_per_hour = request.form['price_per_hour']
-        contact_info = request.form['contact_info']
+        subject = request.form['subject'].strip()
+        description = request.form['description'].strip()
+        price_per_hour = request.form['price_per_hour'].strip()
+        contact_info = request.form['contact_info'].strip()
         if not subject or not description or not price_per_hour:
-            abort(404)
+            flash('Fach, Beschreibung und Preis sind Pflichtfelder.', 'error')
+            return render_template("create_inserat.html")
+        try:
+            price = float(price_per_hour)
+            if price <= 0:
+                flash('Der Preis muss grösser als 0 sein.', 'error')
+                return render_template("create_inserat.html")
+        except ValueError:
+            flash('Bitte einen gültigen Preis eingeben.', 'error')
+            return render_template("create_inserat.html")
         new_inserat = NachhilfeInserat(
             subject=subject,
             description=description,
-            price_per_hour=float(price_per_hour),
+            price_per_hour=price,
             contact_info=contact_info,
             user_id=session['user_id']
         )
         db.session.add(new_inserat)
         db.session.commit()
+        flash('Inserat erfolgreich erstellt!', 'success')
         return redirect(url_for('main'))
     return render_template("create_inserat.html")
 
@@ -93,6 +109,7 @@ def delete_inserat(inserat_id):
         abort(403)
     db.session.delete(inserat)
     db.session.commit()
+    flash('Inserat gelöscht.', 'success')
     return redirect(url_for('main'))
 
 @app.route("/edit_inserat/<int:inserat_id>", methods=["GET", "POST"])
@@ -103,11 +120,27 @@ def edit_inserat(inserat_id):
     if inserat.user_id != session['user_id']:
         abort(403)
     if request.method == "POST":
-        inserat.subject = request.form['subject']
-        inserat.description = request.form['description']
-        inserat.price_per_hour = float(request.form['price_per_hour'])
-        inserat.contact_info = request.form['contact_info']
+        subject = request.form['subject'].strip()
+        description = request.form['description'].strip()
+        price_per_hour = request.form['price_per_hour'].strip()
+        contact_info = request.form['contact_info'].strip()
+        if not subject or not description or not price_per_hour:
+            flash('Fach, Beschreibung und Preis sind Pflichtfelder.', 'error')
+            return render_template("edit_inserat.html", inserat=inserat)
+        try:
+            price = float(price_per_hour)
+            if price <= 0:
+                flash('Der Preis muss grösser als 0 sein.', 'error')
+                return render_template("edit_inserat.html", inserat=inserat)
+        except ValueError:
+            flash('Bitte einen gültigen Preis eingeben.', 'error')
+            return render_template("edit_inserat.html", inserat=inserat)
+        inserat.subject = subject
+        inserat.description = description
+        inserat.price_per_hour = price
+        inserat.contact_info = contact_info
         db.session.commit()
+        flash('Inserat erfolgreich aktualisiert!', 'success')
         return redirect(url_for('main'))
     return render_template("edit_inserat.html", inserat=inserat)
 
@@ -120,6 +153,7 @@ def delete_user(user_id):
     user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
+    flash('Benutzer gelöscht.', 'success')
     return redirect(url_for('admin'))
 
 
@@ -131,7 +165,16 @@ def edit_user(user_id):
         abort(403)
     user = User.query.get_or_404(user_id)
     if request.method == "POST":
-        user.name = request.form['name']
+        new_name = request.form['name'].strip()
+        if not new_name:
+            flash('Der Name darf nicht leer sein.', 'error')
+            return render_template("edit_user.html", user=user)
+        existing = User.query.filter_by(name=new_name).first()
+        if existing and existing.id != user.id:
+            flash('Dieser Benutzername ist bereits vergeben.', 'error')
+            return render_template("edit_user.html", user=user)
+        user.name = new_name
         db.session.commit()
+        flash('Benutzer erfolgreich aktualisiert!', 'success')
         return redirect(url_for('admin'))
     return render_template("edit_user.html", user=user)
