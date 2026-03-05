@@ -4,17 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Hello Admin!</h1>
-    {% for user in users %}
-        <div>
-            <h2>{{ user.name }}</h2>
-            <a href="/edit_user/{{ user.id }}">Edit User</a>
-            <form method="POST" action="/delete_user/{{ user.id }}" style="display:inline;">
-                <button type="submit">Delete User</button>
-            </form>
+    <nav class="navbar">
+        <span class="brand">Nachhilfe-Portal</span>
+        <div class="nav-links">
+            <a href="/">Zurück</a>
+            <a href="/logout">Logout</a>
         </div>
-    {% endfor %}
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Admin Panel</h1>
+
+        <div class="user-list">
+            {% for user in users %}
+                <div class="user-card">
+                    <span class="user-name">{{ user.name }}</span>
+                    <div class="user-actions">
+                        <a href="/edit_user/{{ user.id }}" class="btn btn-edit">Bearbeiten</a>
+                        <form method="POST" action="/delete_user/{{ user.id }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Löschen</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>

@@ -3,27 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main page</title>
+    <title>Nachhilfe-Inserate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    {% if session["user_id"] == 1 %}
-        <a href="/admin">Admin Panel</a>
-    {% endif %}
-    <a href="/create_inserat">Create Inserat</a>
-    {% for inserat in inserate %}
-        <div>
-            <h2>{{ inserat.subject }}</h2>
-            <p>{{ inserat.description }}</p>
-            <p>Price: {{ inserat.price_per_hour }}</p>
-            <br>
-            <p>Contact Info: {{ inserat.contact_info }}</p>
-            {% if session.user_id == inserat.user_id %}
-                <a href="/edit_inserat/{{ inserat.id }}">Edit</a>
-                <form method="POST" action="/delete_inserat/{{ inserat.id }}" style="display:inline;">
-                    <button type="submit">Delete</button>
-                </form>
+    <nav class="navbar">
+        <span class="brand">Nachhilfe-Portal</span>
+        <div class="nav-links">
+            {% if session["user_id"] == 1 %}
+                <a href="/admin">Admin Panel</a>
             {% endif %}
+            <a href="/create_inserat">+ Neues Inserat</a>
+            <a href="/logout">Logout</a>
         </div>
-    {% endfor %}
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Alle Inserate</h1>
+
+        {% if inserate %}
+            {% for inserat in inserate %}
+                <div class="card">
+                    <h2>{{ inserat.subject }}</h2>
+                    <p class="description">{{ inserat.description }}</p>
+                    <div class="meta">
+                        <span>CHF {{ inserat.price_per_hour }} / Stunde</span>
+                        {% if inserat.contact_info %}
+                            <span>Kontakt: {{ inserat.contact_info }}</span>
+                        {% endif %}
+                    </div>
+                    {% if session.user_id == inserat.user_id %}
+                        <div class="actions">
+                            <a href="/edit_inserat/{{ inserat.id }}" class="btn btn-edit">Bearbeiten</a>
+                            <form method="POST" action="/delete_inserat/{{ inserat.id }}" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Löschen</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p>Noch keine Inserate vorhanden. Erstelle das erste!</p>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>

@@ -3,19 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit {{ inserat.subject }}</title>
+    <title>Bearbeiten – {{ inserat.subject }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <form method="POST" action="/edit_inserat/{{ inserat.id }}">
-        <label for="subject">Subject:</label>
-        <input type="text" id="subject" name="subject" value="{{ inserat.subject }}" required><br><br>
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required>{{ inserat.description }}</textarea><br><br>
-        <label for="price_per_hour">Price per hour:</label>
-        <input type="number" id="price_per_hour" name="price_per_hour" value="{{ inserat.price_per_hour }}" step="0.01" required><br><br>
-        <label for="contact_info">Contact Info:</label>
-        <input type="text" id="contact_info" name="contact_info" value="{{ inserat.contact_info }}" required><br><br>
-        <button type="submit">Save Changes</button>
-    </form>
+    <nav class="navbar">
+        <span class="brand">Nachhilfe-Portal</span>
+        <div class="nav-links">
+            <a href="/">Zurück</a>
+        </div>
+    </nav>
+
+    <div class="form-wrapper">
+        <div class="form-card">
+            <h1>Inserat bearbeiten</h1>
+            <form method="POST" action="/edit_inserat/{{ inserat.id }}">
+                <div class="form-group">
+                    <label for="subject">Fach</label>
+                    <input type="text" id="subject" name="subject" value="{{ inserat.subject }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Beschreibung</label>
+                    <textarea id="description" name="description" required>{{ inserat.description }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price_per_hour">Preis pro Stunde (CHF)</label>
+                    <input type="number" id="price_per_hour" name="price_per_hour" value="{{ inserat.price_per_hour }}" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact_info">Kontaktinformation</label>
+                    <input type="text" id="contact_info" name="contact_info" value="{{ inserat.contact_info }}" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

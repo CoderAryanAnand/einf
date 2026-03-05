@@ -3,13 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit {{ user.name }}</title>
+    <title>Benutzer bearbeiten – {{ user.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <form method="POST" action="/edit_user/{{ user.id }}">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="{{ user.name }}" required><br><br>
-        <button type="submit">Update User</button>
-    </form>
+    <nav class="navbar">
+        <span class="brand">Nachhilfe-Portal</span>
+        <div class="nav-links">
+            <a href="/admin">Zurück</a>
+        </div>
+    </nav>
+
+    <div class="form-wrapper">
+        <div class="form-card">
+            <h1>Benutzer bearbeiten</h1>
+            <form method="POST" action="/edit_user/{{ user.id }}">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" value="{{ user.name }}" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Speichern</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
