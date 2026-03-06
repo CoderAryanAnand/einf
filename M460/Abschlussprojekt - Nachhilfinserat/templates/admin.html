@@ -18,19 +18,26 @@
     <div class="container">
         <h1 class="page-title">Admin Panel</h1>
 
+        <!-- Flash-Nachrichten (z.B. "Benutzer gelöscht") -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% for category, message in messages %}
                 <div class="flash flash-{{ category }}">{{ message }}</div>
             {% endfor %}
         {% endwith %}
 
+        <!-- Liste aller Benutzer aus der Datenbank -->
         <div class="user-list">
+            <!-- Jinja2 for-Schleife: iteriert über alle User -->
             {% for user in users %}
                 <div class="user-card">
+                    <!-- user.name = Benutzername aus der User-Tabelle -->
                     <span class="user-name">{{ user.name }}</span>
                     <div class="user-actions">
+                        <!-- Edit-Link mit URL-Parameter: user.id wird in der URL übergeben -->
                         <a href="/edit_user/{{ user.id }}" class="btn btn-edit">Bearbeiten</a>
+                        <!-- Admin kann sich selbst nicht löschen (Schutz) -->
                         {% if user.id != session['user_id'] %}
+                        <!-- Delete per POST-Formular (nicht GET), damit kein versehentliches Löschen -->
                         <form method="POST" action="/delete_user/{{ user.id }}" style="display:inline;">
                             <button type="submit" class="btn btn-danger">Löschen</button>
                         </form>

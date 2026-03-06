@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dynamischer Titel: zeigt den Fach-Namen des Inserats -->
     <title>Bearbeiten – {{ inserat.subject }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -17,18 +18,25 @@
     <div class="form-wrapper">
         <div class="form-card">
             <h1>Inserat bearbeiten</h1>
+
+            <!-- Flash-Nachrichten für Validierungsfehler -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% for category, message in messages %}
                     <div class="flash flash-{{ category }}">{{ message }}</div>
                 {% endfor %}
             {% endwith %}
+
+            <!-- UPDATE-Formular: sendet per POST an /edit_inserat/<id> -->
+            <!-- inserat.id wird als URL-Parameter übergeben -->
             <form method="POST" action="/edit_inserat/{{ inserat.id }}">
                 <div class="form-group">
                     <label for="subject">Fach</label>
+                    <!-- value="{{ inserat.subject }}" = Feld ist vorausgefüllt mit aktuellem Wert aus DB -->
                     <input type="text" id="subject" name="subject" value="{{ inserat.subject }}" required>
                 </div>
                 <div class="form-group">
                     <label for="description">Beschreibung</label>
+                    <!-- Bei textarea steht der Wert zwischen den Tags (nicht in value) -->
                     <textarea id="description" name="description" required>{{ inserat.description }}</textarea>
                 </div>
                 <div class="form-group">

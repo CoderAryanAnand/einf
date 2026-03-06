@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <!-- Navbar mit Zurück-Link zur Hauptseite -->
     <nav class="navbar">
         <span class="brand">Nachhilfe-Portal</span>
         <div class="nav-links">
@@ -14,25 +15,33 @@
         </div>
     </nav>
 
+    <!-- form-wrapper zentriert das Formular vertikal und horizontal -->
     <div class="form-wrapper">
         <div class="form-card">
             <h1>Neues Inserat erstellen</h1>
+
+            <!-- Flash-Nachrichten für Validierungsfehler -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% for category, message in messages %}
                     <div class="flash flash-{{ category }}">{{ message }}</div>
                 {% endfor %}
             {% endwith %}
+
+            <!-- CREATE-Formular: sendet Daten per POST an /create_inserat -->
             <form method="POST" action="/create_inserat">
                 <div class="form-group">
                     <label for="subject">Fach</label>
+                    <!-- name="subject" = Schlüssel für request.form['subject'] in app.py -->
                     <input type="text" id="subject" name="subject" placeholder="z. B. Mathematik" required>
                 </div>
                 <div class="form-group">
                     <label for="description">Beschreibung</label>
+                    <!-- textarea für längere Texte (statt input) -->
                     <textarea id="description" name="description" placeholder="Was bietest du an?" required></textarea>
                 </div>
                 <div class="form-group">
                     <label for="price_per_hour">Preis pro Stunde (CHF)</label>
+                    <!-- type="number" + step="0.01" = nur Zahlen mit 2 Dezimalstellen erlaubt -->
                     <input type="number" id="price_per_hour" name="price_per_hour" step="0.01" placeholder="25.00" required>
                 </div>
                 <div class="form-group">

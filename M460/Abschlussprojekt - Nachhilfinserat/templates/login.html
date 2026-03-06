@@ -2,28 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Responsive: Seite passt sich an Bildschirmgrösse an -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login – Nachhilfe</title>
+    <!-- CSS-Datei einbinden mit url_for (Flask generiert den korrekten Pfad) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+<!-- login-page Klasse gibt der Seite den Gradient-Hintergrund -->
 <body class="login-page">
     <div class="form-card">
         <h1>Nachhilfe-Portal</h1>
         <p class="login-subtitle">Anmelden oder neues Konto erstellen</p>
+
+        <!-- Flash-Nachrichten anzeigen (Erfolg/Fehler vom Server) -->
+        <!-- get_flashed_messages() holt Nachrichten die mit flash() in app.py gesetzt wurden -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% for category, message in messages %}
+                <!-- Kategorie (error/success) wird als CSS-Klasse verwendet für Farbe -->
                 <div class="flash flash-{{ category }}">{{ message }}</div>
             {% endfor %}
         {% endwith %}
+
+        <!-- Formular sendet Daten per POST an /login Route -->
         <form method="POST" action="/login">
             <div class="form-group">
                 <label for="username">Benutzername</label>
+                <!-- name="username" = Schlüssel für request.form['username'] in app.py -->
+                <!-- required = Browser-Validierung: Feld muss ausgefüllt sein -->
                 <input type="text" id="username" name="username" placeholder="Dein Benutzername" required>
             </div>
             <div class="form-group">
                 <label for="password">Passwort</label>
+                <!-- type="password" = Eingabe wird als Punkte angezeigt -->
                 <input type="password" id="password" name="password" placeholder="Dein Passwort" required>
             </div>
+            <!-- type="submit" = Button sendet das Formular ab -->
             <button type="submit" class="btn btn-primary">Login / Registrieren</button>
         </form>
     </div>

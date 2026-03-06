@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <!-- Navigation: sticky oben, mit Links je nach Benutzerrolle -->
     <nav class="navbar">
         <span class="brand">Nachhilfe-Portal</span>
         <div class="nav-links">
+            <!-- Admin-Link nur sichtbar wenn User-ID == 1 (Jinja2 if-Bedingung) -->
             {% if session["user_id"] == 1 %}
                 <a href="/admin">Admin Panel</a>
             {% endif %}
@@ -21,16 +23,23 @@
     <div class="container">
         <h1 class="page-title">Alle Inserate</h1>
 
+        <!-- Flash-Nachrichten (Erfolg/Fehler) anzeigen -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% for category, message in messages %}
                 <div class="flash flash-{{ category }}">{{ message }}</div>
             {% endfor %}
         {% endwith %}
 
+        <!-- Suchformular: method="GET" = Parameter werden in der URL angehängt -->
+        <!-- z.B. /?search=Mathe&max_price=30&sort=price_asc -->
         <form method="GET" action="/" class="search-bar">
             <div class="search-row">
+                <!-- Suchfeld: name="search" wird zu request.args.get('search') in app.py -->
+                <!-- value="{{ search }}" behält den eingegebenen Wert nach dem Absenden -->
                 <input type="text" name="search" placeholder="Suche nach Fach oder Stichwort..." value="{{ search }}" class="search-input">
+                <!-- Preisfilter: type="number" erlaubt nur Zahlen, step="0.01" für Centbeträge -->
                 <input type="number" name="max_price" placeholder="Max. Preis (CHF)" step="0.01" value="{{ max_price }}" class="search-price">
+                <!-- Dropdown für Sortierung: selected markiert die aktuelle Auswahl -->
                 <select name="sort" class="search-sort">
                     <option value="newest" {{ 'selected' if sort == 'newest' }}>Neueste zuerst</option>
                     <option value="price_asc" {{ 'selected' if sort == 'price_asc' }}>Preis aufsteigend</option>
@@ -38,14 +47,17 @@
                 </select>
                 <button type="submit" class="btn btn-primary">Suchen</button>
             </div>
+            <!-- "Filter zurücksetzen" Link nur anzeigen wenn ein Filter aktiv ist -->
             {% if search or max_price or sort != 'newest' %}
                 <a href="/" class="search-reset">Filter zurücksetzen</a>
             {% endif %}
         </form>
 
+        <!-- Jinja2 for-Schleife: geht durch alle Inserate die vom Server übergeben wurden -->
         {% if inserate %}
             {% for inserat in inserate %}
                 <div class="card">
+                    <!-- {{ inserat.subject }} = Jinja2 Variable, gibt den Wert aus der DB aus -->
                     <h2>{{ inserat.subject }}</h2>
                     <p class="description">{{ inserat.description }}</p>
                     <div class="meta">
@@ -54,9 +66,12 @@
                             <span>Kontakt: {{ inserat.contact_info }}</span>
                         {% endif %}
                     </div>
+                    <!-- Bearbeiten/Löschen nur anzeigen wenn der eingeloggte User der Ersteller ist -->
                     {% if session.user_id == inserat.user_id %}
                         <div class="actions">
+                            <!-- Edit: normaler Link (GET) zum Bearbeitungsformular -->
                             <a href="/edit_inserat/{{ inserat.id }}" class="btn btn-edit">Bearbeiten</a>
+                            <!-- Delete: Formular mit POST, nicht GET, damit man nicht per URL löschen kann -->
                             <form method="POST" action="/delete_inserat/{{ inserat.id }}" style="display:inline;">
                                 <button type="submit" class="btn btn-danger">Löschen</button>
                             </form>
@@ -65,6 +80,7 @@
                 </div>
             {% endfor %}
         {% else %}
+            <!-- Leerer Zustand: wird angezeigt wenn keine Inserate vorhanden sind -->
             <div class="empty-state">
                 <p>Noch keine Inserate vorhanden. Erstelle das erste!</p>
             </div>

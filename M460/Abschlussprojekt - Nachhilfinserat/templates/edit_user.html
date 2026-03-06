@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dynamischer Titel mit dem aktuellen Benutzernamen -->
     <title>Benutzer bearbeiten – {{ user.name }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -10,6 +11,7 @@
     <nav class="navbar">
         <span class="brand">Nachhilfe-Portal</span>
         <div class="nav-links">
+            <!-- Zurück zum Admin Panel (nicht zur Hauptseite) -->
             <a href="/admin">Zurück</a>
         </div>
     </nav>
@@ -17,14 +19,19 @@
     <div class="form-wrapper">
         <div class="form-card">
             <h1>Benutzer bearbeiten</h1>
+
+            <!-- Flash-Nachrichten (z.B. "Benutzername bereits vergeben") -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% for category, message in messages %}
                     <div class="flash flash-{{ category }}">{{ message }}</div>
                 {% endfor %}
             {% endwith %}
+
+            <!-- UPDATE-Formular: sendet neuen Namen per POST an /edit_user/<id> -->
             <form method="POST" action="/edit_user/{{ user.id }}">
                 <div class="form-group">
                     <label for="name">Name</label>
+                    <!-- value="{{ user.name }}" = vorausgefüllt mit aktuellem Namen aus DB -->
                     <input type="text" id="name" name="name" value="{{ user.name }}" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Speichern</button>
