@@ -179,9 +179,12 @@ def delete_user(user_id):
     if not (session['user_id'] == 1):
         abort(403)
     user = User.query.get_or_404(user_id)
-    db.session.delete(user)
-    db.session.commit()
-    flash('Benutzer gelöscht.', 'success')
+    if user.id != 1:
+        db.session.delete(user)
+        db.session.commit()
+        flash('Benutzer gelöscht.', 'success')
+        return redirect(url_for('admin'))
+    flash('Der Admin-Benutzer kann nicht gelöscht werden.', 'error')
     return redirect(url_for('admin'))
 
 

@@ -30,9 +30,11 @@
                     <span class="user-name">{{ user.name }}</span>
                     <div class="user-actions">
                         <a href="/edit_user/{{ user.id }}" class="btn btn-edit">Bearbeiten</a>
+                        {% if user.id != session['user_id'] %}
                         <form method="POST" action="/delete_user/{{ user.id }}" style="display:inline;">
                             <button type="submit" class="btn btn-danger">Löschen</button>
                         </form>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
