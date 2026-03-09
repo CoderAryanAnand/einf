@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="brand">Nachhilfe-Portal</span>
+        <div class="nav-links">
+            <a href="/">Zurück</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Admin Panel</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <div class="user-list">
+            {% for user in users %}
+                <div class="user-card">
+                    <span class="user-name">{{ user.name }}</span>
+                    <div class="user-actions">
+                        <a href="/edit_user/{{ user.id }}" class="btn btn-edit">Bearbeiten</a>
+                        {% if user.id != session['user_id'] %}
+                        <form method="POST" action="/delete_user/{{ user.id }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Löschen</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

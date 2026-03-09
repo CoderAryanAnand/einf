@@ -1,0 +1,19 @@
+TutorFinder - Aryan Anand
+Diese Woche umgesetzt:
+ - Search Funktion
+ - Design
+ - Input Validierung (mit flash)
+Angepasste Routes:
+ - GET /
+ - die anderen Routes wurden nur mit flash editiert
+
+Problem oder Bug und Lösung:
+Wie ich den Sort zum Backend schicke. Lösung: mit get-method forms --> url query params
+
+Quellen oder Übernahmen:
+https://stackoverflow.com/questions/7942547/using-or-in-sqlalchemy: or in sqlalchemy
+https://www.w3schools.com/tags/att_form_method.asp: get-method in form --> url query params
+https://stackoverflow.com/questions/20363836/postgresql-ilike-query-with-sqlalchemy: damit man in einem text eine phrase findet
+https://flask.palletsprojects.com/en/stable/patterns/flashing/: message flashing bei validierung
+
+KI gebraucht für das Design.
